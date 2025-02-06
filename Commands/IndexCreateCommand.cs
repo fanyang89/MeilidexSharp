@@ -14,14 +14,14 @@ class IndexCreateCommand : Command<IndexCreateCommand.Settings> {
         public required string BaseDir { get; init; }
 
         [CommandOption("-l|--base-url <BASE-URL>")]
-        public string? BaseUrl { get; set; }
+        public required string? BaseUrl { get; set; }
 
         [CommandOption("-i|--index <INDEX>")]
-        public string? Index { get; init; }
+        public required string? Index { get; init; }
 
         [CommandOption("-b|--batch <BATCH>")]
         [DefaultValue(10000)]
-        public int Batch { get; init; }
+        public required int Batch { get; init; }
     }
 
     private static string HashString(string value) {
@@ -54,10 +54,10 @@ class IndexCreateCommand : Command<IndexCreateCommand.Settings> {
     }
 
     private async Task<int> ExecuteAsync(CommandContext context, Settings settings) {
-        if (settings.BaseUrl != null && !settings.BaseUrl.EndsWith("/")) {
+        if (settings.BaseUrl != null && !settings.BaseUrl.EndsWith('/')) {
             settings.BaseUrl += "/";
         }
-        await using var output = settings.MeilisearchUrl != null
+        await using var output = !string.IsNullOrWhiteSpace(settings.MeilisearchUrl)
             ? (IFileEntryOutput)new MeilisearchOutput(
                 settings.MeilisearchUrl, settings.MasterKey,
                 settings.Index, settings.Batch)
