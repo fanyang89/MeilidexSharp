@@ -1,0 +1,15 @@
+version: "3"
+
+tasks:
+  default:
+    cmds:
+      - task: build
+      - task: release
+
+  build:
+    cmds:
+      - dotnet build MeilidexSharp.csproj
+
+  release:
+    cmds:
+      - dotnet build MeilidexSharp.csproj --runtime linux-x64 --configuration Release
